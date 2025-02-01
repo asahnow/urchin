@@ -1,0 +1,14 @@
+= Urchin Configuration
+
+== Building
+`cd [ZMK repo]/app` +
+`source ../.venv/bin/activate` +
+`west build -d build/left -b nice_nano_v2 -- -DSHIELD=urchin_left -DZMK_EXTRA_MODULES='[urchin repo]'` +
+`west build -d build/right -b nice_nano_v2 -- -DSHIELD=urchin_right -DZMK_EXTRA_MODULES='[urchin repo]'`
+
+== Flashing
+Connect to computer over USB +
+Double click reset button +
+`cp [ZMK repo]/app/build/left/zephyr/zmk.uf2 /dev/sdX` +
+Repeat connection and boot mode entry for other side +
+`cp [ZMK repo]/app/build/right/zephyr/zmk.uf2 /dev/sdY`
