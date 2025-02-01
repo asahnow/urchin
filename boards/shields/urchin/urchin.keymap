@@ -1,5 +1,103 @@
-/*
- * Copyright (c) 2020 Duccio Breschi
- *
- * SPDX-License-Identifier: MIT
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+
+/* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+ * │  0 │  1 │  2 │  3 │  4 ││  5 │  6 │  7 │  8 │  9 │
+ * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+ * │ 10 │ 11 │ 12 │ 13 │ 14 ││ 15 │ 16 │ 17 │ 18 │ 19 │
+ * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+ * │ 20 │ 21 │ 22 │ 23 │ 24 ││ 25 │ 26 │ 27 │ 28 │ 29 │
+ * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+ *                │ 30 │ 31 ││ 32 │ 33 │
+ *                └────┴────┘└────┴────┘
  */
+
+#define GUI_A &hm_l LGUI A
+#define ALT_R &hm_l LALT R
+#define SFT_S &hm_shift_l LSHIFT S
+#define CTL_T &hm_l LCTRL T
+#define ALGR_X &hm_l RALT X
+#define CTL_N &hm_r RCTRL N
+#define SFT_E &hm_shift_r RSHIFT E
+#define ALT_I &hm_r LALT I
+#define GUI_O &hm_r RGUI O
+#define ALGR_DT &hm_r RALT DOT
+
+#define BASE 0
+
+&lt {
+  flavor = "balanced";
+  tapping-term-ms = <150>;
+};
+
+/ {
+  hm_l: homerow_mods_left {
+    compatible = "zmk,behavior-hold-tap";
+    #binding-cells = <2>;
+    bindings = <&kp>, <&kp>;
+    flavor = "balanced";
+    tapping-term-ms = <130>;
+    require-prior-idle-ms = <80>;
+    hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29>;
+    hold-trigger-on-release;
+  };
+
+  hm_shift_l: homerow_shift_left {
+    compatible = "zmk,behavior-hold-tap";
+    #binding-cells = <2>;
+    bindings = <&kp>, <&kp>;
+    flavor = "balanced";
+    tapping-term-ms = <100>;
+    require-prior-idle-ms = <80>;
+    hold-trigger-key-positions = <0 1 2 3 4 10 11 12 13 14 20 21 22 23 24>;
+    hold-trigger-on-release;
+  };
+
+  hm_r: homerow_mods_right {
+    compatible = "zmk,behavior-hold-tap";
+    #binding-cells = <2>;
+    bindings = <&kp>, <&kp>;
+    flavor = "balanced";
+    tapping-term-ms = <130>;
+    require-prior-idle-ms = <80>;
+    hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29>;
+    hold-trigger-on-release;
+  };
+  
+  hm_shift_r: homerow_shift_right {
+    compatible = "zmk,behavior-hold-tap";
+    #binding-cells = <2>;
+    bindings = <&kp>, <&kp>;
+    flavor = "balanced";
+    tapping-term-ms = <100>;
+    require-prior-idle-ms = <80>;
+    hold-trigger-key-positions = <0 1 2 3 4 10 11 12 13 14 20 21 22 23 24>;
+    hold-trigger-on-release;
+  };
+
+  keymap {
+    compatible = "zmk,keymap";
+
+    base_layer {
+      /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+       * │  0 │  1 │  2 │  3 │  4 ││  5 │  6 │  7 │  8 │  9 │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │ 10 │ 11 │ 12 │ 13 │ 14 ││ 15 │ 16 │ 17 │ 18 │ 19 │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │ 20 │ 21 │ 22 │ 23 │ 24 ││ 25 │ 26 │ 27 │ 28 │ 29 │
+       * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+       *                │ 30 │ 31 ││ 32 │ 33 │
+       *                └────┴────┘└────┴────┘
+       */
+      bindings = <
+        &kp Q &kp W  &kp F &kp P &kp B &kp J &kp L &kp U     &kp Y   &kp APOS
+        GUI_A ALT_R  SFT_S CTL_T &kp G &kp M CTL_N SFT_E     ALT_I   GUI_O
+        &kp Z ALGR_X &kp C &kp D &kp V &kp K &kp H &kp COMMA ALGR_DT &kp SLASH
+                           &none &kp BSPC &kp SPC &none
+      >;
+    };
+  };
+};
+
+
