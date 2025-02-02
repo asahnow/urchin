@@ -1,17 +1,20 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
 
-/* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
- * │  0 │  1 │  2 │  3 │  4 ││  5 │  6 │  7 │  8 │  9 │
- * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
- * │ 10 │ 11 │ 12 │ 13 │ 14 ││ 15 │ 16 │ 17 │ 18 │ 19 │
- * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
- * │ 20 │ 21 │ 22 │ 23 │ 24 ││ 25 │ 26 │ 27 │ 28 │ 29 │
- * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
- *                │ 30 │ 31 ││ 32 │ 33 │
- *                └────┴────┘└────┴────┘
- */
+#include "urchin-behaviors.dtsi"
+#include "urchin-combos.dtsi"
+
+#define BASE 0
+#define NAV 1
+#define NUM 2
+#define FUNC 3
+#define SYS 4
+
+#define ACT_NAV &lt NAV SPACE
+#define ACT_NUM &lt NUM SPACE
+#define ACT_FUNC &lt FUNC SPACE
 
 #define GUI_A &hm_l LGUI A
 #define ALT_R &hm_l LALT R
@@ -22,9 +25,25 @@
 #define SFT_E &hm_shift_r RSHIFT E
 #define ALT_I &hm_r LALT I
 #define GUI_O &hm_r RGUI O
-#define ALGR_DT &hm_r RALT DOT
+#define ALGR_DT &dot_colon
 
-#define BASE 0
+#define NAV_LEFT &mt LC(LEFT) LEFT
+#define NAV_DOWN &mt LC(DOWN) DOWN
+#define NAV_UP &mt LC(UP) UP
+#define NAV_RIGHT &mt LC(RIGHT) RIGHT
+#define NAV_HOME &mt LC(HOME) HOME
+#define NAV_END &mt LC(END) END
+
+#define BT_1 &bt BT_SEL 1
+#define BT_2 &bt BT_SEL 2
+#define BT_3 &bt BT_SEL 3
+#define BT_4 &bt BT_SEL 4
+#define BT_5 &bt BT_SEL 5
+#define BOOT &bootloader
+#define RESET &sys_reset
+#define SET_USB &out OUT_USB
+#define SET_BT &out OUT_BLE
+#define TOGGLE &out OUT_TOG
 
 &lt {
   flavor = "balanced";
@@ -32,69 +51,108 @@
 };
 
 / {
-  hm_l: homerow_mods_left {
-    compatible = "zmk,behavior-hold-tap";
-    #binding-cells = <2>;
-    bindings = <&kp>, <&kp>;
-    flavor = "balanced";
-    tapping-term-ms = <130>;
-    require-prior-idle-ms = <80>;
-    hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29>;
-    hold-trigger-on-release;
-  };
-
-  hm_shift_l: homerow_shift_left {
-    compatible = "zmk,behavior-hold-tap";
-    #binding-cells = <2>;
-    bindings = <&kp>, <&kp>;
-    flavor = "balanced";
-    tapping-term-ms = <100>;
-    require-prior-idle-ms = <80>;
-    hold-trigger-key-positions = <0 1 2 3 4 10 11 12 13 14 20 21 22 23 24>;
-    hold-trigger-on-release;
-  };
-
-  hm_r: homerow_mods_right {
-    compatible = "zmk,behavior-hold-tap";
-    #binding-cells = <2>;
-    bindings = <&kp>, <&kp>;
-    flavor = "balanced";
-    tapping-term-ms = <130>;
-    require-prior-idle-ms = <80>;
-    hold-trigger-key-positions = <5 6 7 8 9 15 16 17 18 19 25 26 27 28 29>;
-    hold-trigger-on-release;
-  };
-  
-  hm_shift_r: homerow_shift_right {
-    compatible = "zmk,behavior-hold-tap";
-    #binding-cells = <2>;
-    bindings = <&kp>, <&kp>;
-    flavor = "balanced";
-    tapping-term-ms = <100>;
-    require-prior-idle-ms = <80>;
-    hold-trigger-key-positions = <0 1 2 3 4 10 11 12 13 14 20 21 22 23 24>;
-    hold-trigger-on-release;
+  conditional_layers {
+    compatible = "zmk,conditional-layers";
+    tri_layer {
+      if-layers = <NUM NAV>;
+      then-layer = <SYS>;
+    };
   };
 
   keymap {
     compatible = "zmk,keymap";
-
     base_layer {
       /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
-       * │  0 │  1 │  2 │  3 │  4 ││  5 │  6 │  7 │  8 │  9 │
+       * │  q │  w │  f │  p │  b ││  j │  l │  u │  y │  ' │
        * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
-       * │ 10 │ 11 │ 12 │ 13 │ 14 ││ 15 │ 16 │ 17 │ 18 │ 19 │
+       * │  a │  r │  s │  t │  g ││  m │  n │  e │  i │  o │
        * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
-       * │ 20 │ 21 │ 22 │ 23 │ 24 ││ 25 │ 26 │ 27 │ 28 │ 29 │
+       * │  z │  x │  c │  d │  v ││  k │  h │  , │  . │  ? │
        * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
-       *                │ 30 │ 31 ││ 32 │ 33 │
+       *                │  ␣ │ NUM││ NAV│FUNC│
        *                └────┴────┘└────┴────┘
        */
       bindings = <
         &kp Q &kp W  &kp F &kp P &kp B &kp J &kp L &kp U     &kp Y   &kp APOS
         GUI_A ALT_R  SFT_S CTL_T &kp G &kp M CTL_N SFT_E     ALT_I   GUI_O
-        &kp Z ALGR_X &kp C &kp D &kp V &kp K &kp H &kp COMMA ALGR_DT &kp SLASH
-                           &none &kp BSPC &kp SPC &none
+        &kp Z ALGR_X &kp C &kp D &kp V &kp K &kp H &com_semi ALGR_DT &que_excl
+                           &kp SPC ACT_NUM ACT_NAV ACT_FUNC
+      >;
+    };
+
+    navigation_layer {
+      /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+       * │    │    │    │    │    ││    │    │    │    │    │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │    │    │    │    │    ││    │  ← │  ↓ │  ↑ │  → │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │    │    │    │    │    ││    │  ⇤ │  ⤓ │  ⤒ │  ⇥ │
+       * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+       *                │    │    ││    │    │
+       *                └────┴────┘└────┴────┘
+       */
+      bindings = <
+        &trans &trans &trans &trans &trans &trans &trans   &trans    &trans    &trans
+        &trans &trans &trans &trans &trans &trans NAV_LEFT NAV_DOWN  NAV_UP    NAV_RIGHT
+        &trans &trans &trans &trans &trans &trans NAV_HOME &kp PG_DN &kp PG_UP NAV_END
+                             &trans &trans &trans &trans
+      >;
+    };
+
+    number_layer {
+      /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+       * │    │  7 │  8 │  9 │    ││    │    │    │    │    │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │  0 │  4 │  5 │  6 │    ││    │    │    │    │    │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │    │  1 │  2 │  3 │    ││    │    │    │    │    │
+       * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+       *                │    │    ││    │    │
+       *                └────┴────┘└────┴────┘
+       */
+      bindings = <
+        &trans &kp N7 &kp N8 &kp N9 &trans &trans &trans &trans &trans &trans
+        &kp N0 &kp N4 &kp N5 &kp N6 &trans &trans &trans &trans &trans &trans
+        &trans &kp N1 &kp N2 &kp N3 &trans &trans &trans &trans &trans &trans
+                             &trans &trans &trans &trans
+      >;
+    };
+
+    function_layer {
+      /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+       * │ F12│ F7 │ F8 │ F9 │    ││    │ RW │MUTE│ PAU│ FF │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │ F11│ F4 │ F5 │ F6 │    ││    │PREV│VOL↓│VOL↑│NEXT│
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │ F10│ F1 │ F2 │ F3 │    ││    │    │    │    │    │
+       * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+       *                │    │    ││    │    │
+       *                └────┴────┘└────┴────┘
+       */
+      bindings = <
+        &kp F12 &kp F7 &kp F8 &kp F9 &trans &trans &kp C_RW   &kp C_MUTE   &kp C_PP     &kp C_FF
+        &kp F11 &kp F4 &kp F5 &kp F6 &trans &trans &kp C_PREV &kp C_VOL_DN &kp C_VOL_UP &kp C_NEXT
+        &kp F10 &kp F1 &kp F2 &kp F3 &trans &trans &trans     &trans       &trans       &trans
+                              &trans &trans &trans &trans
+      >;
+    };
+
+    system_layer {
+      /* ┌────┬────┬────┬────┬────┐┌────┬────┬────┬────┬────┐
+       * │    │    │    │    │    ││    │    │    │    │    │
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │ BT✕│ BT4│ BT5│    │BOOT││BOOT│    │ USB│ BT │ TOG│
+       * ├────┼────┼────┼────┼────┤├────┼────┼────┼────┼────┤
+       * │    │ BT1│ BT2│ BT3│RSET││RSET│    │    │    │    │
+       * └────┴────┴────┼────┼────┤├────┼────┼────┴────┴────┘
+       *                │    │    ││    │    │
+       *                └────┴────┘└────┴────┘
+       */
+      bindings = <
+        &trans     &trans &trans &trans &trans &trans &trans &trans  &trans &trans
+        &bt BT_CLR BT_4   BT_5   &trans BOOT   BOOT   &trans SET_USB SET_BT TOGGLE
+        &trans     BT_1   BT_2   BT_3   RESET  RESET  &trans &trans  &trans &trans
+                                 &trans &trans &trans &trans
       >;
     };
   };
